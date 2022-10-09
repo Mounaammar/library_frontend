@@ -1,0 +1,70 @@
+<div class=" flex_container">
+
+  <div class="search_bar">
+    <input type="text" placeholder="Start searching for a book ..." id="rechercheCodier" [formControl]="search_book"><i
+      class="material-icons">search</i>
+  </div>
+  <button class="addBook" mat-raised-button color="primary" (click)="open(content,'add',0)">Add book</button>
+</div>
+
+<div class="container custom_container">
+  <div class="list_book" *ngFor="let book of listBooks_filter">
+    <mat-card class="card">
+      <img src="{{book.cover}}" style="width: 220px ; height: 325px;background-size: cover;"
+        (click)="open(content,'edit',book.id)">
+    </mat-card>
+  </div>
+</div>
+<div style="height: 20px;">
+</div>
+
+<!-- modal -->
+<ng-template #content let-modal class=" modal-lg">
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <form [formGroup]="addBookForm" (ngSubmit)="onClickSubmit(addBookForm.value)">
+    <div class="modal-body">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="group-gap">
+              <!-- Upload image -->
+              <div class="avatar-upload">
+                <div class="avatar-edit">
+                  <input type='file' name="image_book" id="imageUpload" accept=".png, .jpg, .jpeg" #fileInput
+                    (change)="uploadFile($event)" />
+                </div>
+                <div class="avatar-preview">
+                  <div id="imagePreview" [style.backgroundImage]="'url('+ imageUrl +')'">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="btn  btn-lg btn-block" (click)="fileInput.click()">Upload Image</button>
+          </div>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="title" placeholder="Title" formControlName="title_book"
+              name="title_book">
+            <select class="form-control" formControlName="selectedAuthor" name="selectedAuthor" [(ngModel)]="selectedAuth">
+              <option value="" disabled selected hidden>Select author</option>
+              <option *ngFor="let author of authors" [ngValue]="author">{{author.name}}</option>
+            </select>
+            <textarea formControlName="descr_book" name="descr_book" id="" cols="20" rows="8" class="form-control"
+              id="description" placeholder="Description"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="delete_btn" (click)="removeBook(addBookForm.value)"> Delete this book</button>
+      <button type="button" class="btn btn-primary custom_color_btn" (click)="modal.close('Save click')">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="!addBookForm.valid">Save</button>
+    </div>
+  </form>
+
+</ng-template>
